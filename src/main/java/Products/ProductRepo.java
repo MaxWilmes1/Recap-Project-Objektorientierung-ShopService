@@ -1,17 +1,20 @@
+package Products;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductRepo {
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
-    public ProductRepo() {
-        products = new ArrayList<>();
-        products.add(new Product("1", "Apfel"));
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
 
     public Product getProductById(String id) {
         for (Product product : products) {
