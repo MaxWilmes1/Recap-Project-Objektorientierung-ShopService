@@ -1,3 +1,6 @@
+import Orders.Order;
+import Products.Product;
+import Products.ProductRepo;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -10,13 +13,24 @@ class ShopServiceTest {
     void addOrderTest() {
         //GIVEN
         ShopService shopService = new ShopService();
+        ProductRepo productRepo = new ProductRepo();
+        Product product = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build();
+        productRepo.addProduct(product);
+        shopService.setProductRepo(productRepo);
+
         List<String> productsIds = List.of("1");
 
         //WHEN
         Order actual = shopService.addOrder(productsIds);
 
         //THEN
-        Order expected = new Order("-1", List.of(new Product("1", "Apfel")));
+        Order expected = Order.builder()
+                .id("-1")
+                .products(List.of(product))
+                .build();
         assertEquals(expected.products(), actual.products());
         assertNotNull(expected.id());
     }

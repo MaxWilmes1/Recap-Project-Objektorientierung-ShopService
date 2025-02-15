@@ -1,3 +1,6 @@
+import Products.Product;
+import Orders.Order;
+import Orders.OrderListRepo;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,8 +15,14 @@ class OrderListRepoTest {
         //GIVEN
         OrderListRepo repo = new OrderListRepo();
 
-        Product product = new Product("1", "Apfel");
-        Order newOrder = new Order("1", List.of(product));
+        Product product = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build();
+        Order newOrder = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .build();
         repo.addOrder(newOrder);
 
         //WHEN
@@ -21,8 +30,7 @@ class OrderListRepoTest {
 
         //THEN
         List<Order> expected = new ArrayList<>();
-        Product product1 = new Product("1", "Apfel");
-        expected.add(new Order("1", List.of(product1)));
+        expected.add(newOrder);
 
         assertEquals(actual, expected);
     }
@@ -32,16 +40,28 @@ class OrderListRepoTest {
         //GIVEN
         OrderListRepo repo = new OrderListRepo();
 
-        Product product = new Product("1", "Apfel");
-        Order newOrder = new Order("1", List.of(product));
+        Product product = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build();
+        Order newOrder = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .build();
         repo.addOrder(newOrder);
 
         //WHEN
         Order actual = repo.getOrderById("1");
 
         //THEN
-        Product product1 = new Product("1", "Apfel");
-        Order expected = new Order("1", List.of(product1));
+        Product product1 = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build(); ;
+        Order expected = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .build();
 
         assertEquals(actual, expected);
     }
@@ -50,15 +70,27 @@ class OrderListRepoTest {
     void addOrder() {
         //GIVEN
         OrderListRepo repo = new OrderListRepo();
-        Product product = new Product("1", "Apfel");
-        Order newOrder = new Order("1", List.of(product));
+        Product product = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build(); ;
+        Order newOrder = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .build();
 
         //WHEN
         Order actual = repo.addOrder(newOrder);
 
         //THEN
-        Product product1 = new Product("1", "Apfel");
-        Order expected = new Order("1", List.of(product1));
+        Product product1 = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build(); ;
+        Order expected = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .build();
         assertEquals(actual, expected);
         assertEquals(repo.getOrderById("1"), expected);
     }

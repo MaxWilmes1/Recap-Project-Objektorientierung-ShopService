@@ -1,3 +1,6 @@
+import Products.Product;
+import Products.ProductRepo;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,27 +14,38 @@ class ProductRepoTest {
     void getProducts() {
         //GIVEN
         ProductRepo repo = new ProductRepo();
+        Product product = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build();
+        repo.addProduct(product);
 
         //WHEN
         List<Product> actual = repo.getProducts();
 
         //THEN
         List<Product> expected = new ArrayList<>();
-        expected.add(new Product("1", "Apfel"));
-        assertEquals(actual, expected);
+        Product expectedProduct = product;
+        expected.add(expectedProduct);
+        assertEquals(expected, actual);
     }
 
     @org.junit.jupiter.api.Test
     void getProductById() {
         //GIVEN
         ProductRepo repo = new ProductRepo();
+        Product product = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build();
+        repo.addProduct(product);
 
         //WHEN
         Product actual = repo.getProductById("1");
 
         //THEN
-        Product expected = new Product("1", "Apfel");
-        assertEquals(actual, expected);
+        Product expected = product;
+        assertEquals(expected, actual);
     }
 
     @org.junit.jupiter.api.Test

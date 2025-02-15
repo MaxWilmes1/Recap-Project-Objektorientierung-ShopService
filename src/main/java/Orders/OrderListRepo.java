@@ -1,12 +1,16 @@
+package Orders;
+
+import lombok.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderListRepo implements OrderRepo{
     private List<Order> orders = new ArrayList<>();
 
-    public List<Order> getOrders() {
-        return orders;
-    }
 
     public Order getOrderById(String id) {
         for (Order order : orders) {
