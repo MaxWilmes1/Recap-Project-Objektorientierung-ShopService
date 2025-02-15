@@ -2,7 +2,6 @@ package Orders;
 
 import Products.Product;
 import lombok.Builder;
-import lombok.Data;
 import lombok.With;
 
 import java.util.List;

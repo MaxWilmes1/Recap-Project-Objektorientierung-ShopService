@@ -34,4 +34,12 @@ public class ShopService {
 
         return orderRepo.addOrder(newOrder);
     }
+
+    public List<Order> getOrdersByStatus(OrderStatus orderStatus) {
+        List<Order> ordersByStatus = new ArrayList<>();
+        orderRepo.getOrders().stream()
+                .filter(order -> order.status() == orderStatus)
+                .forEach(ordersByStatus::add);
+        return ordersByStatus;
+    }
 }

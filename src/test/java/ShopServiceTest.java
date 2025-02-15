@@ -1,4 +1,4 @@
-import Orders.Order;
+import Orders.*;
 import Products.Product;
 import Products.ProductRepo;
 import org.junit.jupiter.api.Test;
@@ -46,5 +46,35 @@ class ShopServiceTest {
 
         //THEN
         assertNull(actual);
+    }
+
+    @Test
+    void getOrderStatus_given1OrderInStatusInProgress_thenReturn1Order(){
+        //GIVEN
+        ShopService shopService = new ShopService();
+        OrderRepo orderRepo = new OrderListRepo();
+        Product product = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build();
+        Order newOrder = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .status(OrderStatus.IN_PROGRESS)
+                .build();
+        orderRepo.addOrder(newOrder);
+        shopService.setOrderRepo(orderRepo);
+
+        //WHEN
+        List<Order> actual = shopService.getOrdersByStatus(OrderStatus.IN_PROGRESS);
+
+        //THEN
+        Order expectedOrder = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .status(OrderStatus.IN_PROGRESS)
+                .build();
+        List<Order> expected = List.of(expectedOrder);
+        assertEquals(expected, actual);
     }
 }
