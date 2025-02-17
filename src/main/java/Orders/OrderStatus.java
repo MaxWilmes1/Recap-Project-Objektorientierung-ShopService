@@ -5,8 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 public enum OrderStatus {
-    IN_PROGRESS,
+    PROCESSING,
     IN_DELIVERY,
-    WAITING_FOR_PAYMENT,
-    DONE
+    COMPLETED
 }

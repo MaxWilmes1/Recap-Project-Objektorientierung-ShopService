@@ -49,7 +49,7 @@ class ShopServiceTest {
     }
 
     @Test
-    void getOrderStatus_given1OrderInStatusInProgress_thenReturn1Order(){
+    void getOrderStatus_given1OrderInStatusProcessing_thenReturn1Order(){
         //GIVEN
         ShopService shopService = new ShopService();
         OrderRepo orderRepo = new OrderListRepo();
@@ -60,19 +60,19 @@ class ShopServiceTest {
         Order newOrder = Order.builder()
                 .id("1")
                 .products(List.of(product))
-                .status(OrderStatus.IN_PROGRESS)
+                .status(OrderStatus.PROCESSING)
                 .build();
         orderRepo.addOrder(newOrder);
         shopService.setOrderRepo(orderRepo);
 
         //WHEN
-        List<Order> actual = shopService.getOrdersByStatus(OrderStatus.IN_PROGRESS);
+        List<Order> actual = shopService.getOrdersByStatus(OrderStatus.PROCESSING);
 
         //THEN
         Order expectedOrder = Order.builder()
                 .id("1")
                 .products(List.of(product))
-                .status(OrderStatus.IN_PROGRESS)
+                .status(OrderStatus.PROCESSING)
                 .build();
         List<Order> expected = List.of(expectedOrder);
         assertEquals(expected, actual);
