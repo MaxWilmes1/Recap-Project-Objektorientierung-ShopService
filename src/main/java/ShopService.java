@@ -40,6 +40,24 @@ public class ShopService {
                 .forEach(ordersByStatus::add);
         return ordersByStatus;
     }
+
+    /*
+    Es wird ein Optional erstellt
+    Wenn der im Optional eine Order ist, wird der .map Block ausgeführt
+    Wenn null im Optional ist, wird der .orElseThrow Block ausgeführt
+    .map nimmt das Objekt im Optional (hier die Order) und speichert das Objekt im Parameter der Lambda Funktion
+    Der Rückgabewert von return wird zum Rückgabewert der Methode, weswegen dieser auf void gesetzt werden kann
+    */
+    public void updateOrder(String orderID, OrderStatus orderStatus) {
+        Optional.ofNullable(orderRepo.getOrderById(orderID))
+                .map(existingOrder -> {
+                    Order updatedOrder = existingOrder.withStatus(orderStatus);
+                    orderRepo.removeOrder(orderID);
+                    orderRepo.addOrder(updatedOrder);
+                    return updatedOrder;
+                })
+                .orElseThrow(() -> new IllegalArgumentException("Order with ID " + orderID + " not found!"));
+    }
 }
 
 

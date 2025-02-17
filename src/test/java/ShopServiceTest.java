@@ -77,4 +77,79 @@ class ShopServiceTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void updateOrder_given1OrderInStatusProcessing_thenReturnOrderInStatusInDelivery(){
+        //GIVEN
+        ShopService shopService = new ShopService();
+        OrderRepo orderRepo = new OrderListRepo();
+        Product product = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build();
+        Order newOrder = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .status(OrderStatus.PROCESSING)
+                .build();
+        orderRepo.addOrder(newOrder);
+        shopService.setOrderRepo(orderRepo);
+
+        //WHEN
+        shopService.updateOrder("1", OrderStatus.IN_DELIVERY);
+        Order actual = shopService.getOrderRepo().getOrderById("1");
+
+                //THEN
+        Order expected = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .status(OrderStatus.IN_DELIVERY)
+                .build();
+
+        assertEquals(expected, actual);
+    }
+    @Test
+    void updateOrder_given1OrderInStatusProcessig_thenReturnOrderInStatusInDelivery(){
+        //GIVEN
+        ShopService shopService = new ShopService();
+        OrderRepo orderRepo = new OrderListRepo();
+        Product product = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build();
+        Order newOrder = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .status(OrderStatus.PROCESSING)
+                .build();
+        orderRepo.addOrder(newOrder);
+        shopService.setOrderRepo(orderRepo);
+
+        //WHEN
+        shopService.updateOrder("1", OrderStatus.IN_DELIVERY);
+        Order actual = shopService.getOrderRepo().getOrderById("1");
+
+                //THEN
+        Order expected = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .status(OrderStatus.IN_DELIVERY)
+                .build();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void updateOrder_whenOrderDoesNotExist_thenThrowException() {
+        // GIVEN
+        ShopService shopService = new ShopService(); // Neues ShopService-Objekt mit leerem orderRepo
+        String invalidOrderId = "999"; // Eine nicht existierende Order-ID
+
+        // WHEN & THEN
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> shopService.updateOrder(invalidOrderId, OrderStatus.COMPLETED));
+
+        // Überprüfen, ob die erwartete Fehlermeldung zurückgegeben wird
+        assertEquals("Order with ID " + invalidOrderId + " not found!", exception.getMessage());
+    }
+
 }
