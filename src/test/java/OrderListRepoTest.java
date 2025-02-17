@@ -1,6 +1,7 @@
 import Products.Product;
 import Orders.Order;
 import Orders.OrderListRepo;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -9,22 +10,28 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class OrderListRepoTest {
+    private OrderListRepo repo;
+    private Product product;
+    private Order newOrder;
 
-    @Test
-    void getOrders() {
+    @BeforeEach
+    void setup(){
         //GIVEN
-        OrderListRepo repo = new OrderListRepo();
+        repo = new OrderListRepo();
 
-        Product product = Product.builder()
+        product = Product.builder()
                 .id("1")
                 .name("Apfel")
                 .build();
-        Order newOrder = Order.builder()
+        newOrder = Order.builder()
                 .id("1")
                 .products(List.of(product))
                 .build();
         repo.addOrder(newOrder);
+    }
 
+    @Test
+    void getOrders() {
         //WHEN
         List<Order> actual = repo.getOrders();
 
@@ -37,30 +44,17 @@ class OrderListRepoTest {
 
     @Test
     void getOrderById() {
-        //GIVEN
-        OrderListRepo repo = new OrderListRepo();
-
-        Product product = Product.builder()
-                .id("1")
-                .name("Apfel")
-                .build();
-        Order newOrder = Order.builder()
-                .id("1")
-                .products(List.of(product))
-                .build();
-        repo.addOrder(newOrder);
-
         //WHEN
         Order actual = repo.getOrderById("1");
 
         //THEN
-        Product product1 = Product.builder()
+        Product expectedProduct = Product.builder()
                 .id("1")
                 .name("Apfel")
-                .build(); ;
+                .build();
         Order expected = Order.builder()
                 .id("1")
-                .products(List.of(product))
+                .products(List.of(expectedProduct))
                 .build();
 
         assertEquals(actual, expected);
@@ -68,28 +62,17 @@ class OrderListRepoTest {
 
     @Test
     void addOrder() {
-        //GIVEN
-        OrderListRepo repo = new OrderListRepo();
-        Product product = Product.builder()
-                .id("1")
-                .name("Apfel")
-                .build(); ;
-        Order newOrder = Order.builder()
-                .id("1")
-                .products(List.of(product))
-                .build();
-
         //WHEN
         Order actual = repo.addOrder(newOrder);
 
         //THEN
-        Product product1 = Product.builder()
+        Product expectedProduct = Product.builder()
                 .id("1")
                 .name("Apfel")
-                .build(); ;
+                .build();
         Order expected = Order.builder()
                 .id("1")
-                .products(List.of(product))
+                .products(List.of(expectedProduct))
                 .build();
         assertEquals(actual, expected);
         assertEquals(repo.getOrderById("1"), expected);
