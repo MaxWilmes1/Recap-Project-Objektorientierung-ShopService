@@ -3,6 +3,7 @@ import Products.Product;
 import Products.ProductRepo;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,7 +34,8 @@ class ShopServiceTest {
                 .status(OrderStatus.PROCESSING)
                 .build();
         assertEquals(expected.products(), actual.products());
-        assertNotNull(expected.id());
+        assertNotNull(actual.id());
+        assertNotNull(actual.timeStamp());
     }
 
     @Test
@@ -81,15 +83,17 @@ class ShopServiceTest {
     void updateOrder_given1OrderInStatusProcessing_thenReturnOrderInStatusInDelivery(){
         //GIVEN
         ShopService shopService = new ShopService();
-        OrderRepo orderRepo = new OrderListRepo();
+        OrderRepo orderRepo = new OrderMapRepo();
         Product product = Product.builder()
                 .id("1")
                 .name("Apfel")
                 .build();
+
         Order newOrder = Order.builder()
                 .id("1")
                 .products(List.of(product))
                 .status(OrderStatus.PROCESSING)
+                .timeStamp(Instant.now())
                 .build();
         orderRepo.addOrder(newOrder);
         shopService.setOrderRepo(orderRepo);
@@ -98,15 +102,20 @@ class ShopServiceTest {
         shopService.updateOrder("1", OrderStatus.IN_DELIVERY);
         Order actual = shopService.getOrderRepo().getOrderById("1");
 
-                //THEN
+        //THEN
         Order expected = Order.builder()
                 .id("1")
                 .products(List.of(product))
                 .status(OrderStatus.IN_DELIVERY)
+                .timeStamp(newOrder.timeStamp())
                 .build();
 
-        assertEquals(expected, actual);
+        assertEquals(expected.id(), actual.id());
+        assertEquals(expected.products(), actual.products());
+        assertEquals(expected.status(), actual.status());
+        assertNotEquals(expected.timeStamp(), actual.timeStamp());
     }
+
     @Test
     void updateOrder_given1OrderInStatusProcessig_thenReturnOrderInStatusInDelivery(){
         //GIVEN
@@ -151,5 +160,4 @@ class ShopServiceTest {
         // Überprüfen, ob die erwartete Fehlermeldung zurückgegeben wird
         assertEquals("Order with ID " + invalidOrderId + " not found!", exception.getMessage());
     }
-
 }

@@ -4,6 +4,7 @@ import Products.Product;
 import lombok.Builder;
 import lombok.With;
 
+import java.time.Instant;
 import java.util.List;
 
 @Builder
@@ -11,6 +12,7 @@ import java.util.List;
 public record Order(
         String id,
         List<Product> products,
-        OrderStatus status
+        OrderStatus status,
+        Instant timeStamp
 ) {
 }
