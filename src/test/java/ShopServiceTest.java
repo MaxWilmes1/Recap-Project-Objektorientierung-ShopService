@@ -49,7 +49,7 @@ class ShopServiceTest {
     }
 
     @Test
-    void getOrderStatus_given1OrderInStatusProcessing_thenReturn1Order(){
+    void getOrderByStatus_given1OrderInStatusProcessing_thenReturn1Order(){
         //GIVEN
         ShopService shopService = new ShopService();
         OrderRepo orderRepo = new OrderListRepo();
@@ -77,4 +77,5 @@ class ShopServiceTest {
         List<Order> expected = List.of(expectedOrder);
         assertEquals(expected, actual);
     }
+
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Data
@@ -16,13 +17,13 @@ public class ProductRepo {
     private List<Product> products = new ArrayList<>();
 
 
-    public Product getProductById(String id) {
+    public Optional<Product> getProductById(String id) {
         for (Product product : products) {
             if (product.id().equals(id)) {
-                return product;
+                return Optional.ofNullable(product);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     public Product addProduct(Product newProduct) {
