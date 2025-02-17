@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Data
@@ -22,11 +23,8 @@ public class ShopService {
     public Order addOrder(List<String> productIds) {
         List<Product> products = new ArrayList<>();
         for (String productId : productIds) {
-            Product productToOrder = productRepo.getProductById(productId);
-            if (productToOrder == null) {
-                System.out.println("Product mit der Id: " + productId + " konnte nicht bestellt werden!");
-                return null;
-            }
+            Product productToOrder = productRepo.getProductById(productId)
+                    .orElseThrow(() -> new ProductNotAvailableException(productId));
             products.add(productToOrder);
         }
 
@@ -43,3 +41,5 @@ public class ShopService {
         return ordersByStatus;
     }
 }
+
+
