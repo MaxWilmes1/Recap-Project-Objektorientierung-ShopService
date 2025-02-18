@@ -3,6 +3,7 @@ import IDService.UUIDService;
 import Orders.*;
 import Products.Product;
 import Products.ProductRepo;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -11,13 +12,22 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShopServiceTest {
+    private ProductRepo productRepo;
+    private OrderRepo orderRepo;
+    private IdService idService;
+    private ShopService shopService;
+
+    @BeforeEach
+    void setup() {
+        productRepo = new ProductRepo();
+        orderRepo = new OrderMapRepo();
+        idService = new UUIDService();
+        shopService = new ShopService(productRepo, orderRepo, idService);
+    }
 
     @Test
     void addOrderTest() {
         //GIVEN
-        ProductRepo productRepo = new ProductRepo();
-        OrderRepo orderRepo = new OrderMapRepo();
-        IdService idService = new UUIDService();
         Product product = Product.builder()
                 .id("1")
                 .name("Apfel")
@@ -44,9 +54,6 @@ class ShopServiceTest {
     @Test
     void addOrderTest_whenInvalidProductId_expectProductNotAvailableException() {
         //GIVEN
-        ProductRepo productRepo = new ProductRepo();
-        OrderRepo orderRepo = new OrderMapRepo();
-        IdService idService = new UUIDService();
         ShopService shopService = new ShopService(productRepo, orderRepo, idService);
         List<String> productsIds = List.of("1", "2");
 
@@ -58,9 +65,6 @@ class ShopServiceTest {
     @Test
     void getOrderByStatus_givenOrderInStatusProcessing_thenReturnOrder(){
         //GIVEN
-        ProductRepo productRepo = new ProductRepo();
-        OrderRepo orderRepo = new OrderMapRepo();
-        IdService idService = new UUIDService();
         Product product = Product.builder()
                 .id("1")
                 .name("Apfel")
@@ -89,9 +93,6 @@ class ShopServiceTest {
     @Test
     void updateOrder_given1OrderInStatusProcessing_thenReturnOrderInStatusInDelivery(){
         //GIVEN
-        ProductRepo productRepo = new ProductRepo();
-        OrderRepo orderRepo = new OrderMapRepo();
-        IdService idService = new UUIDService();
         Product product = Product.builder()
                 .id("1")
                 .name("Apfel")
@@ -127,9 +128,6 @@ class ShopServiceTest {
     @Test
     void updateOrder_whenOrderDoesNotExist_thenThrowException() {
         // GIVEN
-        ProductRepo productRepo = new ProductRepo();
-        OrderRepo orderRepo = new OrderMapRepo();
-        IdService idService = new UUIDService();
         ShopService shopService = new ShopService(productRepo, orderRepo, idService);
 
         String invalidOrderId = "999"; // Eine nicht existierende Order-ID
@@ -141,4 +139,5 @@ class ShopServiceTest {
         // Überprüfen, ob die erwartete Fehlermeldung zurückgegeben wird
         assertEquals("Order with ID " + invalidOrderId + " not found!", exception.getMessage());
     }
+
 }
