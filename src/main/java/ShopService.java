@@ -9,10 +9,7 @@ import Products.ProductRepo;
 import lombok.*;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @RequiredArgsConstructor
@@ -58,6 +55,13 @@ public class ShopService {
                     return updatedOrder;
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Order with ID " + orderID + " not found!"));
+    }
+
+    public Order getOldestOrderPerStatus(OrderStatus orderStatus) {
+        return orderRepo.getOrders().stream()
+                .filter(order -> order.status().equals(orderStatus))
+                .min(Comparator.comparing(Order::timeStamp))
+                .orElseThrow(() -> new IllegalArgumentException("Es gibt keine Order im Status" + orderStatus));
     }
 }
 

@@ -140,4 +140,35 @@ class ShopServiceTest {
         assertEquals("Order with ID " + invalidOrderId + " not found!", exception.getMessage());
     }
 
+    @Test
+    void getOldestOrderPerStatus() {
+        //GIVEN
+        Product product = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build();
+
+        Order oldOrder = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .status(OrderStatus.PROCESSING)
+                .timeStamp(Instant.now())
+                .build();
+        Order newOrder = Order.builder()
+                .id("2")
+                .products(List.of(product))
+                .status(OrderStatus.PROCESSING)
+                .timeStamp(Instant.now())
+                .build();
+        orderRepo.addOrder(oldOrder);
+        orderRepo.addOrder(newOrder);
+        ShopService shopService = new ShopService(productRepo, orderRepo, idService);
+
+        //WHEN
+        Order actual = shopService.getOldestOrderPerStatus(OrderStatus.PROCESSING);
+
+        //THEN
+        Order expected = oldOrder;
+        assertEquals(expected,actual);
+    }
 }
