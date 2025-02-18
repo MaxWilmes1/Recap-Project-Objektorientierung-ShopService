@@ -7,7 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -140,4 +142,43 @@ class ShopServiceTest {
         assertEquals("Order with ID " + invalidOrderId + " not found!", exception.getMessage());
     }
 
+    @Test
+    void getOldestOrderPerStatus() {
+        //GIVEN
+        Product product = Product.builder()
+                .id("1")
+                .name("Apfel")
+                .build();
+
+        Order order1 = Order.builder()
+                .id("1")
+                .products(List.of(product))
+                .status(OrderStatus.IN_DELIVERY)
+                .timeStamp(Instant.now())
+                .build();
+        Order order2 = Order.builder()
+                .id("2")
+                .products(List.of(product))
+                .status(OrderStatus.PROCESSING)
+                .timeStamp(Instant.now())
+                .build();
+        Order order3 = Order.builder()
+                .id("3")
+                .products(List.of(product))
+                .status(OrderStatus.PROCESSING)
+                .timeStamp(Instant.now())
+                .build();
+        orderRepo.addOrder(order1);
+        orderRepo.addOrder(order2);
+        orderRepo.addOrder(order3);
+
+        ShopService shopService = new ShopService(productRepo, orderRepo, idService);
+
+        //WHEN
+        Map<String, Order> actual = shopService.getOldestOrderPerStatus();
+
+        //THEN
+        Map<String, Order> expected = Map.of("1", order1, "2", order2);
+        assertEquals(expected,actual);
+    }
 }
