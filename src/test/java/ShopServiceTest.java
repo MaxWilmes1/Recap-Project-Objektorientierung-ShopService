@@ -13,14 +13,14 @@ class ShopServiceTest {
     @Test
     void addOrderTest() {
         //GIVEN
-        ShopService shopService = new ShopService();
         ProductRepo productRepo = new ProductRepo();
+        OrderRepo orderRepo = new OrderMapRepo();
         Product product = Product.builder()
                 .id("1")
                 .name("Apfel")
                 .build();
         productRepo.addProduct(product);
-        shopService.setProductRepo(productRepo);
+        ShopService shopService = new ShopService(productRepo, orderRepo);
 
         List<String> productsIds = List.of("1");
 
@@ -41,7 +41,9 @@ class ShopServiceTest {
     @Test
     void addOrderTest_whenInvalidProductId_expectProductNotAvailableException() {
         //GIVEN
-        ShopService shopService = new ShopService();
+        ProductRepo productRepo = new ProductRepo();
+        OrderRepo orderRepo = new OrderMapRepo();
+        ShopService shopService = new ShopService(productRepo, orderRepo);
         List<String> productsIds = List.of("1", "2");
 
         //WHEN
@@ -52,8 +54,8 @@ class ShopServiceTest {
     @Test
     void getOrderByStatus_givenOrderInStatusProcessing_thenReturnOrder(){
         //GIVEN
-        ShopService shopService = new ShopService();
-        OrderRepo orderRepo = new OrderListRepo();
+        ProductRepo productRepo = new ProductRepo();
+        OrderRepo orderRepo = new OrderMapRepo();
         Product product = Product.builder()
                 .id("1")
                 .name("Apfel")
@@ -64,7 +66,7 @@ class ShopServiceTest {
                 .status(OrderStatus.PROCESSING)
                 .build();
         orderRepo.addOrder(newOrder);
-        shopService.setOrderRepo(orderRepo);
+        ShopService shopService = new ShopService(productRepo, orderRepo);
 
         //WHEN
         List<Order> actual = shopService.getOrdersByStatus(OrderStatus.PROCESSING);
@@ -82,7 +84,7 @@ class ShopServiceTest {
     @Test
     void updateOrder_given1OrderInStatusProcessing_thenReturnOrderInStatusInDelivery(){
         //GIVEN
-        ShopService shopService = new ShopService();
+        ProductRepo productRepo = new ProductRepo();
         OrderRepo orderRepo = new OrderMapRepo();
         Product product = Product.builder()
                 .id("1")
@@ -96,7 +98,7 @@ class ShopServiceTest {
                 .timeStamp(Instant.now())
                 .build();
         orderRepo.addOrder(newOrder);
-        shopService.setOrderRepo(orderRepo);
+        ShopService shopService = new ShopService(productRepo, orderRepo);
 
         //WHEN
         shopService.updateOrder("1", OrderStatus.IN_DELIVERY);
@@ -119,7 +121,10 @@ class ShopServiceTest {
     @Test
     void updateOrder_whenOrderDoesNotExist_thenThrowException() {
         // GIVEN
-        ShopService shopService = new ShopService(); // Neues ShopService-Objekt mit leerem orderRepo
+        ProductRepo productRepo = new ProductRepo();
+        OrderRepo orderRepo = new OrderMapRepo();
+        ShopService shopService = new ShopService(productRepo, orderRepo);
+
         String invalidOrderId = "999"; // Eine nicht existierende Order-ID
 
         // WHEN & THEN

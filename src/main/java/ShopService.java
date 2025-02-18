@@ -4,9 +4,7 @@ import Orders.OrderRepo;
 import Orders.OrderStatus;
 import Products.Product;
 import Products.ProductRepo;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,11 +13,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ShopService {
-    private ProductRepo productRepo = new ProductRepo();
-    private OrderRepo orderRepo = new OrderMapRepo();
+    private final ProductRepo productRepo;
+    private final OrderRepo orderRepo;
+
 
     public Order addOrder(List<String> productIds) {
         List<Product> products = new ArrayList<>();
