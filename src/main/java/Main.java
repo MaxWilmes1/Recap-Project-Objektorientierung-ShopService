@@ -1,3 +1,5 @@
+import IDService.IdService;
+import IDService.UUIDService;
 import Orders.OrderMapRepo;
 import Orders.OrderRepo;
 import Products.Product;
@@ -11,8 +13,9 @@ public class Main {
     public static void main(String[] args) {
         ProductRepo productRepo = new ProductRepo();
         OrderRepo orderRepo = new OrderMapRepo();
+        IdService idService = new UUIDService();
 
-        ShopService myShop = new ShopService(productRepo, orderRepo);
+        ShopService myShop = new ShopService(productRepo, orderRepo, idService);
 
         Product apple = Product.builder()
                 .id("1")

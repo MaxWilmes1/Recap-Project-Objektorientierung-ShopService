@@ -1,3 +1,5 @@
+import IDService.IdService;
+import IDService.UUIDService;
 import Orders.Order;
 import Orders.OrderMapRepo;
 import Orders.OrderRepo;
@@ -17,7 +19,7 @@ import java.util.UUID;
 public class ShopService {
     private final ProductRepo productRepo;
     private final OrderRepo orderRepo;
-
+    private final IdService idService;
 
     public Order addOrder(List<String> productIds) {
         List<Product> products = new ArrayList<>();
@@ -26,8 +28,8 @@ public class ShopService {
                     .orElseThrow(() -> new ProductNotAvailableException(productId));
             products.add(productToOrder);
         }
-
-        Order newOrder = new Order(UUID.randomUUID().toString(), products, OrderStatus.PROCESSING, Instant.now());
+        String newId = idService.generateId();
+        Order newOrder = new Order(newId, products, OrderStatus.PROCESSING, Instant.now());
 
         return orderRepo.addOrder(newOrder);
     }

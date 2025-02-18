@@ -1,3 +1,5 @@
+import IDService.IdService;
+import IDService.UUIDService;
 import Orders.*;
 import Products.Product;
 import Products.ProductRepo;
@@ -15,12 +17,13 @@ class ShopServiceTest {
         //GIVEN
         ProductRepo productRepo = new ProductRepo();
         OrderRepo orderRepo = new OrderMapRepo();
+        IdService idService = new UUIDService();
         Product product = Product.builder()
                 .id("1")
                 .name("Apfel")
                 .build();
         productRepo.addProduct(product);
-        ShopService shopService = new ShopService(productRepo, orderRepo);
+        ShopService shopService = new ShopService(productRepo, orderRepo, idService);
 
         List<String> productsIds = List.of("1");
 
@@ -43,7 +46,8 @@ class ShopServiceTest {
         //GIVEN
         ProductRepo productRepo = new ProductRepo();
         OrderRepo orderRepo = new OrderMapRepo();
-        ShopService shopService = new ShopService(productRepo, orderRepo);
+        IdService idService = new UUIDService();
+        ShopService shopService = new ShopService(productRepo, orderRepo, idService);
         List<String> productsIds = List.of("1", "2");
 
         //WHEN
@@ -56,6 +60,7 @@ class ShopServiceTest {
         //GIVEN
         ProductRepo productRepo = new ProductRepo();
         OrderRepo orderRepo = new OrderMapRepo();
+        IdService idService = new UUIDService();
         Product product = Product.builder()
                 .id("1")
                 .name("Apfel")
@@ -66,7 +71,7 @@ class ShopServiceTest {
                 .status(OrderStatus.PROCESSING)
                 .build();
         orderRepo.addOrder(newOrder);
-        ShopService shopService = new ShopService(productRepo, orderRepo);
+        ShopService shopService = new ShopService(productRepo, orderRepo, idService);
 
         //WHEN
         List<Order> actual = shopService.getOrdersByStatus(OrderStatus.PROCESSING);
@@ -86,6 +91,7 @@ class ShopServiceTest {
         //GIVEN
         ProductRepo productRepo = new ProductRepo();
         OrderRepo orderRepo = new OrderMapRepo();
+        IdService idService = new UUIDService();
         Product product = Product.builder()
                 .id("1")
                 .name("Apfel")
@@ -98,7 +104,7 @@ class ShopServiceTest {
                 .timeStamp(Instant.now())
                 .build();
         orderRepo.addOrder(newOrder);
-        ShopService shopService = new ShopService(productRepo, orderRepo);
+        ShopService shopService = new ShopService(productRepo, orderRepo, idService);
 
         //WHEN
         shopService.updateOrder("1", OrderStatus.IN_DELIVERY);
@@ -123,7 +129,8 @@ class ShopServiceTest {
         // GIVEN
         ProductRepo productRepo = new ProductRepo();
         OrderRepo orderRepo = new OrderMapRepo();
-        ShopService shopService = new ShopService(productRepo, orderRepo);
+        IdService idService = new UUIDService();
+        ShopService shopService = new ShopService(productRepo, orderRepo, idService);
 
         String invalidOrderId = "999"; // Eine nicht existierende Order-ID
 
