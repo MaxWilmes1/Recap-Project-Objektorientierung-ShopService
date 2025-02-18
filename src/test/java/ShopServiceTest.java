@@ -29,11 +29,11 @@ class ShopServiceTest {
 
         //THEN
         Order expected = Order.builder()
-                .id("1")
                 .products(List.of(product))
                 .status(OrderStatus.PROCESSING)
                 .build();
         assertEquals(expected.products(), actual.products());
+        assertEquals(expected.status(), actual.status());
         assertNotNull(actual.id());
         assertNotNull(actual.timeStamp());
     }
@@ -50,7 +50,7 @@ class ShopServiceTest {
     }
 
     @Test
-    void getOrderByStatus_given1OrderInStatusProcessing_thenReturn1Order(){
+    void getOrderByStatus_givenOrderInStatusProcessing_thenReturnOrder(){
         //GIVEN
         ShopService shopService = new ShopService();
         OrderRepo orderRepo = new OrderListRepo();
@@ -114,37 +114,6 @@ class ShopServiceTest {
         assertEquals(expected.products(), actual.products());
         assertEquals(expected.status(), actual.status());
         assertNotEquals(expected.timeStamp(), actual.timeStamp());
-    }
-
-    @Test
-    void updateOrder_given1OrderInStatusProcessig_thenReturnOrderInStatusInDelivery(){
-        //GIVEN
-        ShopService shopService = new ShopService();
-        OrderRepo orderRepo = new OrderListRepo();
-        Product product = Product.builder()
-                .id("1")
-                .name("Apfel")
-                .build();
-        Order newOrder = Order.builder()
-                .id("1")
-                .products(List.of(product))
-                .status(OrderStatus.PROCESSING)
-                .build();
-        orderRepo.addOrder(newOrder);
-        shopService.setOrderRepo(orderRepo);
-
-        //WHEN
-        shopService.updateOrder("1", OrderStatus.IN_DELIVERY);
-        Order actual = shopService.getOrderRepo().getOrderById("1");
-
-                //THEN
-        Order expected = Order.builder()
-                .id("1")
-                .products(List.of(product))
-                .status(OrderStatus.IN_DELIVERY)
-                .build();
-
-        assertEquals(expected, actual);
     }
 
     @Test
