@@ -7,7 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -148,27 +150,35 @@ class ShopServiceTest {
                 .name("Apfel")
                 .build();
 
-        Order oldOrder = Order.builder()
+        Order order1 = Order.builder()
                 .id("1")
                 .products(List.of(product))
-                .status(OrderStatus.PROCESSING)
+                .status(OrderStatus.IN_DELIVERY)
                 .timeStamp(Instant.now())
                 .build();
-        Order newOrder = Order.builder()
+        Order order2 = Order.builder()
                 .id("2")
                 .products(List.of(product))
                 .status(OrderStatus.PROCESSING)
                 .timeStamp(Instant.now())
                 .build();
-        orderRepo.addOrder(oldOrder);
-        orderRepo.addOrder(newOrder);
+        Order order3 = Order.builder()
+                .id("3")
+                .products(List.of(product))
+                .status(OrderStatus.PROCESSING)
+                .timeStamp(Instant.now())
+                .build();
+        orderRepo.addOrder(order1);
+        orderRepo.addOrder(order2);
+        orderRepo.addOrder(order3);
+
         ShopService shopService = new ShopService(productRepo, orderRepo, idService);
 
         //WHEN
-        Order actual = shopService.getOldestOrderPerStatus(OrderStatus.PROCESSING);
+        Map<String, Order> actual = shopService.getOldestOrderPerStatus();
 
         //THEN
-        Order expected = oldOrder;
+        Map<String, Order> expected = Map.of("1", order1, "2", order2);
         assertEquals(expected,actual);
     }
 }

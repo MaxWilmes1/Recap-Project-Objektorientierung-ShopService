@@ -57,11 +57,17 @@ public class ShopService {
                 .orElseThrow(() -> new IllegalArgumentException("Order with ID " + orderID + " not found!"));
     }
 
-    public Order getOldestOrderPerStatus(OrderStatus orderStatus) {
-        return orderRepo.getOrders().stream()
-                .filter(order -> order.status().equals(orderStatus))
-                .min(Comparator.comparing(Order::timeStamp))
-                .orElseThrow(() -> new IllegalArgumentException("Es gibt keine Order im Status" + orderStatus));
+    public Map<String, Order> getOldestOrderPerStatus() {
+        Map<String,Order> oldestOrderPerStatus = new HashMap<>();
+
+        for (OrderStatus status : OrderStatus.values()) {
+            orderRepo.getOrders().stream()
+                    .filter(order -> order.status().equals(status))
+                    .min(Comparator.comparing(Order::timeStamp))
+                    .ifPresent(order -> oldestOrderPerStatus.put(order.id(), order));
+        }
+
+        return oldestOrderPerStatus;
     }
 }
 
